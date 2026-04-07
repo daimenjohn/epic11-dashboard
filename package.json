@@ -1,0 +1,16 @@
+{
+  "name": "epic22-platform",
+  "version": "1.0.0",
+  "description": "Epic 22 Internal Platform — M4E Operations",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
