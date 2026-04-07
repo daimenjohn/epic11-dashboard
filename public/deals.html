@@ -3,24 +3,1659 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Epic 22 Deal Scorecard — M4E Assessment Engine">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23101010'/><text y='.9em' font-size='70' x='50%' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' fill='%23c9a85c'>E</text></svg>">
 <title>Deal Scorecard — Epic 22</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Syne:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Syne:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --gold: #c8a96e; --gold-border: rgba(200,169,110,0.22); --black: #06060a; --white: #f2efe9; --muted: #7a7870; --serif: 'Cormorant Garamond', Georgia, serif; --sans: 'Syne', system-ui, sans-serif; }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--black); color: var(--white); font-family: var(--sans); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px; }
-  .mark { width: 56px; height: 56px; border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 22px; color: var(--gold); margin: 0 auto 32px; }
-  h1 { font-family: var(--serif); font-size: 48px; font-weight: 300; color: var(--white); margin-bottom: 12px; }
-  h1 em { font-style: italic; color: var(--gold); }
-  p { font-size: 13px; color: var(--muted); line-height: 1.8; max-width: 400px; margin: 0 auto 40px; }
-  a { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--gold-border); padding: 12px 24px; border-radius: 6px; transition: background 0.15s; }
-  a:hover { background: rgba(200,169,110,0.1); }
+:root {
+  --black:#080808; --surface:#101010; --surface2:#181818; --surface3:#222222; --surface4:#2a2a2a;
+  --gold:#c9a85c; --gold-bright:#e8c97a; --gold-dim:rgba(201,168,92,0.1); --gold-border:rgba(201,168,92,0.25);
+  --white:#f0ede8; --muted:#888880; --dim:#444440;
+  --green:#4caf6e; --green-bg:rgba(76,175,110,0.1);
+  --amber:#e6a32a; --amber-bg:rgba(230,163,42,0.1);
+  --red:#e05252; --red-bg:rgba(224,82,82,0.1);
+  --blue:#4a90d9; --blue-bg:rgba(74,144,217,0.1);
+  --text:#f0ede8; --text2:#c8c5be; --mid:#888880;
+  --light:#181818; --rule:rgba(255,255,255,0.06); --white:#f0ede8;
+  --radius:10px; --shadow:0 2px 20px rgba(0,0,0,0.4);
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'Syne',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--black);color:var(--white);min-height:100vh}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:0.028;}
+
+/* ── TOP BAR ── */
+.topbar{background:var(--surface);padding:0 28px;display:flex;align-items:center;height:56px;gap:16px;border-bottom:1px solid var(--gold-border);position:sticky;top:0;z-index:100}
+.topbar .logo{font-family:var(--serif);font-size:18px;color:var(--white);display:flex;align-items:center;gap:12px}
+.logo-mark{width:32px;height:32px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--gold)}
+.topbar .logo span{color:var(--gold)}
+.topbar .tagline{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em}
+.topbar .back-link{margin-left:auto;font-size:10px;color:var(--muted);text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(255,255,255,0.06);border-radius:6px;transition:all .12s}
+.topbar .back-link:hover{color:var(--gold);border-color:var(--gold-border)}
+.gold-stripe{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+/* ── PIPELINE NAV ── */
+.pipeline-nav{background:var(--surface);border-bottom:1px solid rgba(255,255,255,0.05);padding:0 28px;display:flex;align-items:stretch;gap:0;overflow-x:auto}
+.pipeline-nav::-webkit-scrollbar{display:none}
+.stage-tab{display:flex;align-items:center;gap:9px;padding:13px 20px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;color:var(--dim);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;user-select:none;white-space:nowrap;font-family:var(--sans)}
+.stage-tab:hover{color:var(--muted)}
+.stage-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.stage-tab.done{color:var(--green)}
+.stage-tab.locked{opacity:.35;cursor:not-allowed}
+.stage-num{width:22px;height:22px;border-radius:50%;background:var(--surface3);color:var(--dim);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--dim)}
+.stage-tab.active .stage-num{background:var(--gold-dim);border-color:var(--gold-border);color:var(--gold)}
+.stage-tab.done .stage-num{background:rgba(76,175,110,0.15);border-color:rgba(76,175,110,0.3);color:var(--green)}
+.stage-connector{width:28px;height:1px;background:var(--dim);align-self:center;flex-shrink:0}
+.stage-connector.done{background:var(--green)}
+
+/* ── LAYOUT ── */
+.stage-panel{display:none;padding:28px 28px 64px;max-width:1080px;margin:0 auto}
+.stage-panel.active{display:block}
+.page-title{font-family:var(--serif);font-size:26px;font-weight:400;color:var(--white);margin-bottom:4px}
+.page-sub{font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px}
+.card-title{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+
+/* ── UPLOAD ZONE ── */
+.upload-zone{border:1px dashed var(--gold-border);border-radius:var(--radius);padding:48px 32px;text-align:center;cursor:pointer;transition:all .2s;background:var(--gold-dim)}
+.upload-zone:hover,.upload-zone.drag-over{border-color:rgba(201,168,92,0.5);background:rgba(201,168,92,0.08)}
+.upload-zone .icon{font-size:32px;margin-bottom:12px;opacity:0.5}
+.upload-zone h3{font-size:15px;color:var(--white);margin-bottom:6px;font-family:var(--serif);font-weight:400}
+.upload-zone p{font-size:12px;color:var(--muted)}
+.upload-zone input{display:none}
+.file-chosen{background:rgba(76,175,110,0.06);border-color:rgba(76,175,110,0.3)}
+.file-chosen h3{color:var(--green)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:7px;font-size:10px;font-weight:600;cursor:pointer;border:none;transition:all .12s;text-transform:uppercase;letter-spacing:0.08em;font-family:var(--sans)}
+.btn-primary{background:var(--gold);color:var(--black)}
+.btn-primary:hover{background:var(--gold-bright)}
+.btn-gold{background:var(--gold);color:var(--black)}
+.btn-gold:hover{background:var(--gold-bright)}
+.btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--muted)}
+.btn-outline:hover{border-color:var(--gold-border);color:var(--gold)}
+.btn-green{background:rgba(76,175,110,0.15);color:var(--green);border:1px solid rgba(76,175,110,0.25)}
+.btn-green:hover{background:rgba(76,175,110,0.22)}
+.btn-sm{padding:6px 13px;font-size:9px}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+
+/* ── VERDICT BADGE ── */
+.verdict-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border-radius:6px;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.06em}
+.verdict-green{background:rgba(76,175,110,0.12);color:var(--green);border:1px solid rgba(76,175,110,0.25)}
+.verdict-amber{background:rgba(230,163,42,0.12);color:var(--amber);border:1px solid rgba(230,163,42,0.25)}
+.verdict-red{background:rgba(224,82,82,0.12);color:var(--red);border:1px solid rgba(224,82,82,0.25)}
+
+/* ── SCORE BARS ── */
+.criterion-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--rule)}
+.criterion-row:last-child{border-bottom:none}
+.crit-name{font-size:12px;color:var(--text2);flex:1;min-width:140px}
+.crit-bar-track{flex:1;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;min-width:80px}
+.crit-bar-fill{height:100%;border-radius:2px;transition:width .4s}
+.crit-score-badge{font-size:12px;font-weight:600;width:32px;text-align:right;font-family:var(--serif)}
+.crit-reasoning{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.5}
+
+/* ── BADGES ── */
+.ai-badge{display:inline-flex;align-items:center;gap:3px;background:var(--blue-bg);color:var(--blue);font-size:9px;font-weight:600;padding:2px 6px;border-radius:10px;text-transform:uppercase;letter-spacing:0.06em}
+.tbc-badge{display:inline-flex;align-items:center;gap:3px;background:var(--gold-dim);color:var(--gold);font-size:9px;font-weight:600;padding:2px 6px;border-radius:10px;text-transform:uppercase;letter-spacing:0.06em}
+.blocker-badge{display:inline-flex;align-items:center;gap:4px;background:var(--red-bg);color:var(--red);font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px}
+
+/* ── META INFO ── */
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.meta-item{background:var(--surface2);border-radius:7px;padding:11px 13px;border:1px solid var(--rule)}
+.meta-item .label{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:4px}
+.meta-item .value{font-size:13px;font-weight:500;color:var(--white)}
+
+/* ── STRENGTH / RISK LISTS ── */
+.sr-list{list-style:none;display:flex;flex-direction:column;gap:5px}
+.sr-list li{font-size:12px;padding:7px 11px;border-radius:6px;display:flex;align-items:flex-start;gap:7px}
+.sr-list li::before{font-size:12px;flex-shrink:0;margin-top:1px}
+.strength-list li{background:rgba(76,175,110,0.08);color:#7dd99a;border:1px solid rgba(76,175,110,0.15)}
+.strength-list li::before{content:"✓"}
+.risk-list li{background:rgba(224,82,82,0.08);color:#f08080;border:1px solid rgba(224,82,82,0.15)}
+.risk-list li::before{content:"!"}
+
+/* ── MARKET INTEL ── */
+.market-card{background:var(--surface2);border-radius:8px;padding:14px;border:1px solid var(--rule)}
+.market-card .label{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:5px}
+.market-card .value{font-size:14px;font-weight:500;color:var(--gold);font-family:var(--serif)}
+.market-card .sub{font-size:11px;color:var(--text2);margin-top:4px}
+.competitor-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--rule)}
+.competitor-row:last-child{border-bottom:none}
+.competitor-name{font-weight:600;font-size:12px;min-width:130px;color:var(--white)}
+.competitor-note{font-size:11px;color:var(--muted)}
+.question-item{background:var(--amber-bg);border-left:3px solid var(--gold);padding:9px 13px;border-radius:0 6px 6px 0;font-size:12px;color:var(--text2);margin-bottom:7px}
+
+/* ── SCORESHEET ── */
+.score-layout{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start}
+.section-block{margin-bottom:16px}
+.section-header{background:var(--surface2);color:var(--white);padding:9px 14px;border-radius:7px 7px 0 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--rule);border-bottom:none}
+.section-header .sec-score{font-size:14px;color:var(--gold);font-family:var(--serif)}
+.crit-input-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--rule);background:var(--surface);border-left:1px solid var(--rule);border-right:1px solid var(--rule)}
+.crit-input-row:last-of-type{border-radius:0 0 7px 7px;border-bottom:1px solid var(--rule)}
+.crit-input-row:nth-child(even){background:var(--surface2)}
+.crit-label{flex:1;font-size:12px;color:var(--text2)}
+.crit-label .badge-wrap{margin-left:6px}
+.score-btns{display:flex;gap:3px}
+.score-btn{width:30px;height:26px;border-radius:5px;border:1px solid var(--rule);background:var(--surface3);font-size:11px;font-weight:600;cursor:pointer;transition:all .12s;color:var(--dim);font-family:var(--sans)}
+.score-btn:hover{border-color:var(--gold-border);color:var(--gold)}
+.score-btn.active-0{background:rgba(224,82,82,0.2);border-color:rgba(224,82,82,0.4);color:var(--red)}
+.score-btn.active-1{background:rgba(224,82,82,0.2);border-color:rgba(224,82,82,0.4);color:var(--red)}
+.score-btn.active-2{background:rgba(230,163,42,0.2);border-color:rgba(230,163,42,0.4);color:var(--amber)}
+.score-btn.active-3{background:rgba(74,144,217,0.2);border-color:rgba(74,144,217,0.4);color:var(--blue)}
+.score-btn.active-4{background:rgba(76,175,110,0.2);border-color:rgba(76,175,110,0.4);color:var(--green)}
+
+/* ── SIDEBAR ── */
+.sidebar .card{padding:16px}
+.verdict-big{text-align:center;padding:16px 0}
+.verdict-big .pct{font-family:var(--serif);font-size:48px;color:var(--gold);line-height:1}
+.verdict-big .pts{font-size:11px;color:var(--muted);margin-top:4px}
+.verdict-display{margin-top:10px;display:flex;justify-content:center}
+.blocker-toggle{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--rule);font-size:11px;color:var(--text2)}
+.blocker-toggle:last-child{border-bottom:none}
+.toggle-sw{position:relative;width:34px;height:18px;flex-shrink:0}
+.toggle-sw input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--surface3);border-radius:9px;cursor:pointer;transition:.18s;border:1px solid var(--dim)}
+.toggle-slider:before{content:"";position:absolute;width:12px;height:12px;left:2px;top:2px;background:var(--muted);border-radius:50%;transition:.18s}
+.toggle-sw input:checked + .toggle-slider{background:rgba(224,82,82,0.2);border-color:rgba(224,82,82,0.4)}
+.toggle-sw input:checked + .toggle-slider:before{transform:translateX(16px);background:var(--red)}
+.section-bar-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--rule)}
+.section-bar-row:last-child{border-bottom:none}
+.sec-bar-name{font-size:11px;flex:1;color:var(--text2)}
+.sec-bar-track{flex:1;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.sec-bar-fill{height:100%;border-radius:2px}
+.sec-bar-score{font-size:10px;color:var(--muted);min-width:36px;text-align:right}
+
+/* ── TABS ── */
+.tab-nav{display:flex;gap:0;border-bottom:1px solid var(--rule);margin-bottom:18px}
+.tab-btn{padding:9px 18px;font-size:10px;font-weight:600;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;text-transform:uppercase;letter-spacing:0.08em;transition:all .12s;font-family:var(--sans)}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ── VALUATION CALC ── */
+.val-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.val-input-group{display:flex;flex-direction:column;gap:5px}
+.val-input-group label{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted)}
+.val-input-group input{padding:8px 11px;border:1px solid rgba(255,255,255,0.08);border-radius:7px;font-size:13px;font-family:var(--sans);color:var(--white);background:var(--surface2);outline:none;transition:border-color .12s}
+.val-input-group input:focus{border-color:var(--gold-border)}
+.val-input-group input::placeholder{color:var(--dim)}
+.scenario-table{width:100%;border-collapse:collapse;margin-top:14px}
+.scenario-table th{background:var(--surface2);color:var(--muted);padding:8px 12px;font-size:9px;text-transform:uppercase;letter-spacing:0.08em;text-align:center;font-family:var(--sans);font-weight:600;border-bottom:1px solid var(--rule)}
+.scenario-table td{padding:8px 12px;font-size:12px;text-align:center;border-bottom:1px solid var(--rule);color:var(--text2)}
+.scenario-table tr:last-child td{border-bottom:none}
+.scenario-table tr.base-case td{background:rgba(201,168,92,0.06);color:var(--white);font-weight:600}
+.positive{color:var(--green)} .negative{color:var(--red)}
+
+/* ── CRITERION NOTES ── */
+.crit-note-row{padding:0 14px 7px;background:var(--surface);border-left:1px solid var(--rule);border-right:1px solid var(--rule)}
+.crit-note-row:nth-child(even){background:var(--surface2)}
+.crit-note-input{width:100%;padding:5px 9px;border:1px solid rgba(255,255,255,0.05);border-radius:4px;font-size:10px;color:var(--muted);font-family:var(--sans);background:var(--surface3);outline:none;transition:border-color .12s}
+.crit-note-input:focus{border-color:var(--gold-border);color:var(--white)}
+.crit-note-input::placeholder{color:var(--dim)}
+
+/* ── PITCH ANGLE CALLOUT ── */
+.pitch-callout{background:rgba(74,144,217,0.07);border-left:3px solid rgba(74,144,217,0.4);padding:13px 16px;border-radius:0 7px 7px 0;font-size:12px;color:var(--text2);line-height:1.7;margin-top:4px}
+
+/* ── PLAYER REC CARDS ── */
+.player-rec-row{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;border-bottom:1px solid var(--rule)}
+.player-rec-row:last-child{border-bottom:none}
+.player-rec-name{font-weight:600;font-size:12px;color:var(--gold);min-width:140px;font-family:var(--serif)}
+.player-rec-dots{display:flex;gap:3px;margin-top:4px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--surface3);border:1px solid var(--dim)}
+.dot.filled{background:var(--blue);border-color:rgba(74,144,217,0.4)}
+.player-rec-rationale{font-size:11px;color:var(--text2);flex:1;line-height:1.6}
+
+/* ── DEAL STRUCTURE CARD ── */
+.deal-struct-badge{display:inline-flex;align-items:center;gap:7px;background:var(--surface2);color:var(--gold);padding:5px 13px;border-radius:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;border:1px solid var(--gold-border)}
+.friction-badge{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(230,163,42,0.25);padding:3px 9px;border-radius:4px;font-size:10px;font-weight:600;margin-left:8px}
+
+/* ── MEMO STAGE ── */
+.memo-preview{background:var(--surface2);border-radius:8px;padding:36px;text-align:center;border:1px dashed var(--gold-border)}
+
+/* ── SPINNER ── */
+.spinner-wrap{display:flex;align-items:center;justify-content:center;padding:48px;gap:14px;flex-direction:column}
+.spinner{width:36px;height:36px;border:3px solid var(--surface3);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner-text{font-size:13px;color:var(--muted)}
+
+/* ── SAVE INDICATOR ── */
+.auto-save-badge {
+  font-size: 9px; color: var(--confirmed); letter-spacing: 0.08em;
+  text-transform: uppercase; display: flex; align-items: center; gap: 5px;
+  padding: 0 16px; flex-shrink: 0;
+}
+.auto-save-badge::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--confirmed); display: block;
+}
+
+
+/* ── LOADING OVERLAY ── */
+#loadingOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+#loadingOverlay.show{display:flex}
+.loading-box{background:var(--surface);border:1px solid var(--gold-border);border-radius:12px;padding:32px 44px;text-align:center}
+.loading-box h3{color:var(--white);margin-top:14px;font-size:15px;font-family:var(--serif);font-weight:400}
+.loading-box p{color:var(--muted);font-size:12px;margin-top:5px}
+
+/* ── MISC ── */
+.text-green{color:var(--green)} .text-amber{color:var(--amber)} .text-red{color:var(--red)}
+.text-navy{color:var(--gold)} .text-mid{color:var(--muted)}
+.mt-4{margin-top:4px} .mt-8{margin-top:8px} .mt-12{margin-top:12px} .mt-16{margin-top:16px} .mt-20{margin-top:20px}
+.mb-8{margin-bottom:8px} .mb-16{margin-bottom:16px}
+.flex{display:flex} .items-center{align-items:center} .gap-8{gap:8px} .gap-12{gap:12px} .gap-16{gap:16px}
+.justify-between{justify-content:space-between} .justify-end{justify-content:flex-end}
+.w-full{width:100%}
+hr.gold{border:none;border-top:1px solid var(--gold-border);margin:14px 0;opacity:.5}
+.notice{background:rgba(230,163,42,0.08);border:1px solid rgba(230,163,42,0.2);border-radius:7px;padding:11px 14px;font-size:12px;color:var(--amber);display:flex;gap:10px;align-items:flex-start}
+
+
+@media(max-width:700px){
+  .topbar { padding: 0 14px; gap: 8px; }
+  .back-link { display: none; }
+  .pipeline-nav { padding: 0 10px; }
+  .stage-tab { padding: 10px 10px; font-size: 9px; }
+  .stage-connector { width: 12px; }
+  .stage-panel { padding: 16px 14px 48px; }
+  .auto-save-badge { display: none; }
+  .score-layout { grid-template-columns: 1fr; }
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .val-grid { grid-template-columns: 1fr; }
+  .meta-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media(max-width:900px){
+  .score-layout{grid-template-columns:1fr}
+  .two-col,.three-col{grid-template-columns:1fr}
+  .val-grid{grid-template-columns:1fr}
+  .pipeline-nav{overflow-x:auto}
+}
 </style>
 </head>
 <body>
-  <div class="mark">E</div>
-  <h1>Deal <em>Scorecard</em></h1>
-  <p>The M4E deal assessment engine is being migrated to this platform. Drop in the deals.html file to your deployment to activate it.</p>
-  <a href="/">← Back to Platform</a>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <a href="/" class="logo" style="text-decoration:none">
+    <div class="logo-mark">E</div>
+    Epic <span>22</span>
+  </a>
+  <div class="tagline">Deal Scorecard · Media for Equity</div>
+  <a class="back-link" href="/">← Platform</a>
+</div>
+<div class="gold-stripe"></div>
+
+<!-- PIPELINE NAV -->
+<nav class="pipeline-nav">
+  <div class="stage-tab active" id="tab1" onclick="goStage(1)">
+    <div class="stage-num">1</div> Screen Deck
+  </div>
+  <div class="stage-connector" id="conn1"></div>
+  <div class="stage-tab locked" id="tab2" onclick="goStage(2)">
+    <div class="stage-num">2</div> Market Intel
+  </div>
+  <div class="stage-connector" id="conn2"></div>
+  <div class="stage-tab locked" id="tab3" onclick="goStage(3)">
+    <div class="stage-num">3</div> Score
+  </div>
+  <div class="stage-connector" id="conn3"></div>
+  <div class="stage-tab locked" id="tab4" onclick="goStage(4)">
+    <div class="stage-num">4</div> Deal Memo
+  </div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:14px;padding-right:4px">
+    <span class="auto-save-badge" id="autoSaveBadge">Auto-saved</span>
+  </div>
+</nav>
+
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <h3 id="loadingTitle">Analysing deck…</h3>
+    <p id="loadingText">Reading the pitch deck — this takes 15-30 seconds</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- STAGE 1: SCREEN                                        -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="stage-panel active" id="stage1">
+  <div class="page-title">Stage 1 — Screen the Deck</div>
+  <div class="page-sub">Upload a pitch deck PDF to assess M4E compatibility before investing time in scoring.</div>
+
+  <!-- Upload Zone -->
+  <div class="card" id="uploadCard">
+    <div class="card-title">Upload Pitch Deck</div>
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('deckInput').click()"
+         ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+      <div class="icon">📄</div>
+      <h3>Drop PDF here or click to browse</h3>
+      <p>Supports PDF pitch decks up to 20MB</p>
+      <input type="file" id="deckInput" accept=".pdf" onchange="handleFileSelect(event)">
+    </div>
+    <div class="mt-16 flex justify-end gap-8" id="uploadActions" style="display:none!important">
+      <button class="btn btn-primary" onclick="runDeckAnalysis()">▶ Analyse Deck</button>
+    </div>
+  </div>
+
+  <!-- AI Results -->
+  <div id="screenResults" style="display:none">
+
+    <!-- Compatibility Verdict -->
+    <div class="card" id="verdictCard">
+      <div class="card-title">M4E Compatibility Verdict</div>
+      <div class="flex items-center gap-16 mt-8" id="verdictArea">
+      </div>
+    </div>
+
+    <!-- Company Overview -->
+    <div class="card">
+      <div class="card-title">Company Overview</div>
+      <div class="meta-grid" id="companyMeta"></div>
+      <div class="mt-16" id="productSummary"></div>
+    </div>
+
+    <!-- Scores & Reasoning -->
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Auto-Scores (11 criteria from deck)</div>
+        <div id="deckScoreList"></div>
+      </div>
+      <div>
+        <!-- Strengths -->
+        <div class="card">
+          <div class="card-title">Key Strengths</div>
+          <ul class="sr-list strength-list" id="strengthList"></ul>
+        </div>
+        <!-- Risks -->
+        <div class="card">
+          <div class="card-title">Key Risks</div>
+          <ul class="sr-list risk-list" id="riskList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Blockers -->
+    <div class="card" id="blockersCard" style="display:none">
+      <div class="card-title">⚠️ Hard Blockers Detected</div>
+      <div id="blockersList"></div>
+    </div>
+
+    <!-- Player Recommendations + Deal Structure + Pitch Angle -->
+    <div class="two-col" id="m4eInsightCards" style="display:none">
+      <div>
+        <div class="card">
+          <div class="card-title">Player Recommendations</div>
+          <div id="playerRecList"></div>
+        </div>
+        <div class="card mt-8">
+          <div class="card-title">Deal Structure Recommendation</div>
+          <div id="dealStructureCard"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Pitch Angle — Why Us, Why These Players, Why Now</div>
+        <div id="pitchAngleCard"></div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-12 justify-end mt-20">
+      <button class="btn btn-outline btn-sm" onclick="resetStage1()">↩ Upload Different Deck</button>
+      <button class="btn btn-gold" onclick="proceedToMarket()">Proceed to Market Intel →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- STAGE 2: MARKET INTEL                                  -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="stage-panel" id="stage2">
+  <div class="page-title">Stage 2 — Market Intelligence</div>
+  <div class="page-sub">Market context, competitor landscape, and athlete fit analysis.</div>
+
+  <div class="card" id="marketInputCard">
+    <div class="card-title">Research Parameters</div>
+    <div class="two-col">
+      <div class="val-input-group">
+        <label>Company</label>
+        <input type="text" id="mktCompany" placeholder="e.g. Stasher">
+      </div>
+      <div class="val-input-group">
+        <label>Sector</label>
+        <input type="text" id="mktSector" placeholder="e.g. Travel Tech">
+      </div>
+      <div class="val-input-group">
+        <label>Geography</label>
+        <input type="text" id="mktGeo" placeholder="e.g. UK, Europe">
+      </div>
+    </div>
+    <div class="val-input-group mt-12">
+      <label>Product Description</label>
+      <input type="text" id="mktDesc" placeholder="Brief description of the product/service">
+    </div>
+    <div class="flex justify-end mt-16">
+      <button class="btn btn-primary" onclick="runMarketResearch()">▶ Run Market Research</button>
+    </div>
+  </div>
+
+  <div id="marketResults" style="display:none">
+
+    <!-- Market Size -->
+    <div class="card">
+      <div class="card-title">Market Size</div>
+      <div class="three-col">
+        <div class="market-card">
+          <div class="label">Total Addressable Market</div>
+          <div class="value" id="mktTAM">—</div>
+        </div>
+        <div class="market-card">
+          <div class="label">Serviceable Market</div>
+          <div class="value" id="mktSAM">—</div>
+        </div>
+        <div class="market-card">
+          <div class="label">Growth Trend</div>
+          <div class="value" id="mktGrowth">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <!-- Competitors -->
+      <div class="card">
+        <div class="card-title">Competitor Landscape</div>
+        <div id="competitorList"></div>
+      </div>
+
+      <!-- Athlete Angle -->
+      <div class="card">
+        <div class="card-title">Athlete Partnerships & M4E Angle</div>
+        <div id="athleteList"></div>
+        <hr class="gold">
+        <div class="card-title" style="margin-top:12px">Player Geo Match</div>
+        <div id="playerGeoMatch" style="font-size:13px;color:var(--text2)"></div>
+        <hr class="gold">
+        <div class="card-title" style="margin-top:12px">World Cup 2026 Angle</div>
+        <div id="worldCupAngle" style="font-size:13px;color:var(--text2)"></div>
+      </div>
+    </div>
+
+    <!-- Investment Thesis -->
+    <div class="card">
+      <div class="card-title">Epic 22 Investment Thesis</div>
+      <div id="investmentThesis" style="font-size:14px;line-height:1.6;color:var(--text)"></div>
+    </div>
+
+    <!-- Key Questions -->
+    <div class="card">
+      <div class="card-title">Questions to Ask the Founder</div>
+      <div id="keyQuestions"></div>
+    </div>
+
+    <div class="flex gap-12 justify-end mt-20">
+      <button class="btn btn-outline btn-sm" onclick="goStage(1)">← Back to Screen</button>
+      <button class="btn btn-gold" onclick="proceedToScore()">Proceed to Score →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- STAGE 3: SCORE                                         -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="stage-panel" id="stage3">
+  <div class="page-title">Stage 3 — Full Scoresheet</div>
+  <div class="page-sub">11 criteria are auto-scored from the deck. Complete the 3 Deal Structure criteria once equity terms are received.</div>
+
+  <div id="aiPrefillNotice" class="notice mb-16" style="display:none">
+    <span>ℹ</span>
+    <div>
+      <strong>Auto-scored from deck:</strong> 11 criteria have been pre-filled based on the pitch deck analysis.
+      <span class="ai-badge">AUTO</span> = pre-filled &nbsp;|&nbsp; <span class="tbc-badge">TBC</span> = awaiting equity terms.
+      Override any score manually. Add optional notes per criterion — they appear in the PDF memo.
+    </div>
+  </div>
+
+  <div class="tab-nav">
+    <div class="tab-btn active" onclick="switchTab('scoresheet')">Scoresheet</div>
+    <div class="tab-btn" onclick="switchTab('valuation')">Valuation & Deal Terms</div>
+  </div>
+
+  <!-- SCORESHEET TAB -->
+  <div class="tab-content active" id="tab-scoresheet">
+    <div class="score-layout">
+      <!-- LEFT: Criteria -->
+      <div>
+
+        <!-- Section 1 — Equity Value -->
+        <div class="section-block">
+          <div class="section-header">
+            <span>Section 1 — Equity Value</span>
+            <span class="sec-score" id="sec1-score">0/16</span>
+          </div>
+          <div>
+            <div class="crit-input-row">
+              <div class="crit-label">Business Stage &amp; Traction <span class="badge-wrap" id="badge-stage"></span></div>
+              <div class="score-btns" id="btns-stage"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional — appears in PDF)" oninput="notes['stage']=this.value"></div>
+            <div class="crit-input-row">
+              <div class="crit-label">Liquidity Path <span class="badge-wrap" id="badge-liquidity"></span></div>
+              <div class="score-btns" id="btns-liquidity"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['liquidity']=this.value"></div>
+            <div class="crit-input-row">
+              <div class="crit-label">Team Credibility <span class="badge-wrap" id="badge-team"></span></div>
+              <div class="score-btns" id="btns-team"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['team']=this.value"></div>
+          </div>
+        </div>
+
+        <!-- Section 2 — M4E Fit -->
+        <div class="section-block">
+          <div class="section-header">
+            <span>Section 2 — M4E Fit</span>
+            <span class="sec-score" id="sec2-score">0/16</span>
+          </div>
+          <div>
+            <div class="crit-input-row">
+              <div class="crit-label">Brand-Athlete Alignment <span class="badge-wrap" id="badge-brand-align"></span></div>
+              <div class="score-btns" id="btns-brand-align"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['brand-align']=this.value"></div>
+            <div class="crit-input-row">
+              <div class="crit-label">Social Content Potential <span class="badge-wrap" id="badge-content"></span></div>
+              <div class="score-btns" id="btns-content"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['content']=this.value"></div>
+            <div class="crit-input-row">
+              <div class="crit-label">Category Cleanliness <span class="badge-wrap" id="badge-category"></span></div>
+              <div class="score-btns" id="btns-category"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['category']=this.value"></div>
+            <div class="crit-input-row">
+              <div class="crit-label">Campaign Concept Clarity <span class="badge-wrap" id="badge-campaign"></span></div>
+              <div class="score-btns" id="btns-campaign"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['campaign']=this.value"></div>
+          </div>
+        </div>
+
+        <!-- Section 3 — Deal Structure (TBC until terms received) -->
+        <div class="section-block">
+          <div class="section-header">
+            <span>Section 3 — Deal Structure</span>
+            <span class="sec-score" id="sec3-score">0/12</span>
+          </div>
+          <div>
+            <div class="crit-input-row">
+              <div class="crit-label">Equity Quality <span class="badge-wrap" id="badge-equity-q"><span class="tbc-badge">TBC</span></span></div>
+              <div class="score-btns" id="btns-equity-q"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['equity-q']=this.value"></div>
+            <div class="crit-input-row">
+              <div class="crit-label">Valuation Fairness <span class="badge-wrap" id="badge-val-fair"><span class="tbc-badge">TBC</span></span></div>
+              <div class="score-btns" id="btns-val-fair"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['val-fair']=this.value"></div>
+            <div class="crit-input-row">
+              <div class="crit-label">Legal Simplicity <span class="badge-wrap" id="badge-legal"><span class="tbc-badge">TBC</span></span></div>
+              <div class="score-btns" id="btns-legal"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['legal']=this.value"></div>
+          </div>
+        </div>
+
+        <!-- Section 4 — Geography & Audience -->
+        <div class="section-block">
+          <div class="section-header">
+            <span>Section 4 — Geography &amp; Audience</span>
+            <span class="sec-score" id="sec4-score">0/8</span>
+          </div>
+          <div>
+            <div class="crit-input-row">
+              <div class="crit-label">Market Overlap (EU/UK/GCC) <span class="badge-wrap" id="badge-geo"></span></div>
+              <div class="score-btns" id="btns-geo"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['geo']=this.value"></div>
+            <div class="crit-input-row">
+              <div class="crit-label">Audience Match <span class="badge-wrap" id="badge-audience"></span></div>
+              <div class="score-btns" id="btns-audience"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['audience']=this.value"></div>
+          </div>
+        </div>
+
+        <!-- Section 5 — Epic 11 Alignment -->
+        <div class="section-block">
+          <div class="section-header">
+            <span>Section 5 — Epic 11 Alignment</span>
+            <span class="sec-score" id="sec5-score">0/8</span>
+          </div>
+          <div>
+            <div class="crit-input-row">
+              <div class="crit-label">Player Brand Fit <span class="badge-wrap" id="badge-player-fit"></span></div>
+              <div class="score-btns" id="btns-player-fit"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['player-fit']=this.value"></div>
+            <div class="crit-input-row">
+              <div class="crit-label">First-Mover Advantage <span class="badge-wrap" id="badge-first-mover"></span></div>
+              <div class="score-btns" id="btns-first-mover"></div>
+            </div>
+            <div class="crit-note-row"><input class="crit-note-input" type="text" placeholder="Note (optional)" oninput="notes['first-mover']=this.value"></div>
+          </div>
+        </div>
+
+        <!-- Meta fields -->
+        <div class="card">
+          <div class="card-title">Deal Details</div>
+          <div class="two-col">
+            <div class="val-input-group">
+              <label>Company Name</label>
+              <input type="text" id="meta-company" placeholder="Company name">
+            </div>
+            <div class="val-input-group">
+              <label>Reviewer</label>
+              <input type="text" id="meta-reviewer" placeholder="Your name">
+            </div>
+            <div class="val-input-group">
+              <label>Players</label>
+              <input type="text" id="meta-players" placeholder="e.g. Courtois / Militao">
+            </div>
+            <div class="val-input-group">
+              <label>Deal Type</label>
+              <input type="text" id="meta-deal-type" value="Media for Equity (M4E)">
+            </div>
+          </div>
+          <div class="val-input-group mt-12">
+            <label>Context &amp; Notes</label>
+            <input type="text" id="meta-context" placeholder="Brief context for the memo">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Sidebar -->
+      <div class="sidebar">
+        <!-- Score Summary -->
+        <div class="card">
+          <div class="card-title">Score Summary</div>
+          <div class="verdict-big">
+            <div class="pct" id="pct-display">0%</div>
+            <div class="pts" id="pts-display">0 / 60 points</div>
+          </div>
+          <div class="verdict-display">
+            <div id="verdict-display-badge"></div>
+          </div>
+          <hr class="gold">
+          <div id="section-bars"></div>
+        </div>
+
+        <!-- Hard Blockers -->
+        <div class="card">
+          <div class="card-title">Hard Blockers</div>
+          <div class="blocker-toggle">
+            <span>Gambling / Alcohol / Tobacco</span>
+            <label class="toggle-sw"><input type="checkbox" id="bl-gat" onchange="updateVerdict()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="blocker-toggle">
+            <span>No vesting / lock-up</span>
+            <label class="toggle-sw"><input type="checkbox" id="bl-vest" onchange="updateVerdict()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="blocker-toggle">
+            <span>Club rights conflict</span>
+            <label class="toggle-sw"><input type="checkbox" id="bl-club" onchange="updateVerdict()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="blocker-toggle">
+            <span>Unresolved conflict of interest</span>
+            <label class="toggle-sw"><input type="checkbox" id="bl-coi" onchange="updateVerdict()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="blocker-toggle">
+            <span>Pre-seed / seed stage</span>
+            <label class="toggle-sw"><input type="checkbox" id="bl-stage" onchange="updateVerdict()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="flex gap-8 flex-direction-col" style="flex-direction:column">
+          <button class="btn btn-outline btn-sm" onclick="goStage(2)" style="width:100%">← Back to Market Intel</button>
+          <button class="btn btn-gold w-full" onclick="proceedToMemo()" style="width:100%;margin-top:8px">Generate Deal Memo →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VALUATION TAB -->
+  <div class="tab-content" id="tab-valuation">
+    <div class="notice mb-16">
+      <span>💡</span>
+      <div>Enter equity terms here once received from the founder. Fields left blank will show as TBC in the deal memo. All inputs are manual — fill in what you know, leave the rest empty.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Deal Terms &amp; Valuation</div>
+      <div class="val-grid">
+        <div class="val-input-group">
+          <label>Current Valuation (€M)</label>
+          <input type="number" id="val-now" placeholder="e.g. 20" oninput="calcVal()">
+        </div>
+        <div class="val-input-group">
+          <label>Equity Offered (%)</label>
+          <input type="number" id="val-eq" placeholder="e.g. 5" oninput="calcVal()">
+        </div>
+        <div class="val-input-group">
+          <label>Exit Multiple (x)</label>
+          <input type="number" id="val-mult" placeholder="e.g. 10" oninput="calcVal()">
+        </div>
+        <div class="val-input-group">
+          <label>Exit Years</label>
+          <input type="number" id="val-yrs" placeholder="e.g. 5" oninput="calcVal()">
+        </div>
+        <div class="val-input-group">
+          <label>Dilution to Exit (%)</label>
+          <input type="number" id="val-dil" placeholder="e.g. 30" oninput="calcVal()">
+        </div>
+        <div class="val-input-group">
+          <label>Media Cost (€k)</label>
+          <input type="number" id="val-media" placeholder="e.g. 500" oninput="calcVal()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="val-results" style="display:none">
+      <div class="card-title">Exit Scenario Analysis</div>
+      <table class="scenario-table">
+        <thead>
+          <tr><th>Scenario</th><th>Co. Value</th><th>Epic Share</th><th>Net Upside</th></tr>
+        </thead>
+        <tbody id="scenario-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- STAGE 4: DEAL MEMO                                     -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="stage-panel" id="stage4">
+  <div class="page-title">Stage 4 — Deal Memo</div>
+  <div class="page-sub">Generate a professional PDF deal assessment memorandum.</div>
+
+  <div class="card">
+    <div class="card-title">Memo Summary</div>
+    <div class="meta-grid" id="memoMeta"></div>
+  </div>
+
+  <div class="card">
+    <div class="memo-preview">
+      <div style="font-size:40px;margin-bottom:16px;opacity:0.5">📋</div>
+      <h3 style="font-family:var(--serif);font-size:20px;font-weight:400;color:var(--white);margin-bottom:8px">Ready to Generate</h3>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:24px">Generate the Epic 22 Deal Assessment Memorandum as a PDF.</p>
+      <button class="btn btn-gold" onclick="generateMemo()" style="font-size:15px;padding:14px 32px">
+        ⬇ Download Deal Memo PDF
+      </button>
+    </div>
+  </div>
+
+  <div class="flex gap-12 justify-end mt-4">
+    <button class="btn btn-outline btn-sm" onclick="goStage(3)">← Back to Score</button>
+    <button class="btn btn-primary btn-sm" onclick="resetAll()">↩ New Deal</button>
+  </div>
+</div>
+
+<script>
+// ═════════════════════════════════════════════════════════
+// STATE
+// ═════════════════════════════════════════════════════════
+const pipeline = {
+  deck: null,        // File object
+  deckB64: null,     // base64 string
+  ai: null,          // /analyze_deck result
+  market: null,      // /market_research result
+  stage: 1,
+  unlocked: [1],
+};
+
+// M4E scoring — 14 criteria, 5 sections, 60 points maximum
+// Section maxes: s1=16, s2=16, s3=12, s4=8, s5=8
+const CRITERIA = [
+  // Section 1 — Equity Value (max 16)
+  {id:'stage',        label:'Business Stage & Traction',   section:1, weight:2},
+  {id:'liquidity',    label:'Liquidity Path',              section:1, weight:1},
+  {id:'team',         label:'Team Credibility',            section:1, weight:1},
+  // Section 2 — M4E Fit (max 16)
+  {id:'brand-align',  label:'Brand-Athlete Alignment',     section:2, weight:1},
+  {id:'content',      label:'Social Content Potential',    section:2, weight:1},
+  {id:'category',     label:'Category Cleanliness',        section:2, weight:1},
+  {id:'campaign',     label:'Campaign Concept Clarity',    section:2, weight:1},
+  // Section 3 — Deal Structure (max 12, scored manually after terms received)
+  {id:'equity-q',     label:'Equity Quality',              section:3, weight:1},
+  {id:'val-fair',     label:'Valuation Fairness',          section:3, weight:1},
+  {id:'legal',        label:'Legal Simplicity',            section:3, weight:1},
+  // Section 4 — Geography & Audience (max 8)
+  {id:'geo',          label:'Market Overlap (EU/UK/GCC)',  section:4, weight:1},
+  {id:'audience',     label:'Audience Match',              section:4, weight:1},
+  // Section 5 — Epic 11 Alignment (max 8)
+  {id:'player-fit',   label:'Player Brand Fit',            section:5, weight:1},
+  {id:'first-mover',  label:'First-Mover Advantage',       section:5, weight:1},
+];
+
+const S_MAX = {1:16, 2:16, 3:12, 4:8, 5:8}; // total 60
+
+// Map from AI JSON keys → criteria IDs (11 auto-scored; 3 deal-structure are TBC)
+const AI_MAP = {
+  business_stage_traction:  'stage',
+  liquidity_path:            'liquidity',
+  team_credibility:          'team',
+  brand_athlete_alignment:   'brand-align',
+  social_content_potential:  'content',
+  category_cleanliness:      'category',
+  campaign_concept_clarity:  'campaign',
+  market_overlap:            'geo',
+  audience_match:            'audience',
+  player_brand_fit:          'player-fit',
+  first_mover_advantage:     'first-mover',
+};
+
+const scores = {};  // id → 0-4
+const notes  = {};  // id → free-text note
+
+// ═════════════════════════════════════════════════════════
+// INIT SCORE BUTTONS
+// ═════════════════════════════════════════════════════════
+function initScoreButtons() {
+  CRITERIA.forEach(c => {
+    const container = document.getElementById('btns-' + c.id);
+    if (!container) return;
+    container.innerHTML = '';
+    [0,1,2,3,4].forEach(v => {
+      const btn = document.createElement('button');
+      btn.className = 'score-btn';
+      btn.textContent = v;
+      btn.onclick = () => setScore(c.id, v);
+      btn.id = 'btn-' + c.id + '-' + v;
+      container.appendChild(btn);
+    });
+  });
+  updateVerdict();
+}
+
+function setScore(id, val, isAI) {
+  scores[id] = val;
+  CRITERIA.forEach(c => {
+    if (c.id !== id) return;
+    [0,1,2,3,4].forEach(v => {
+      const btn = document.getElementById('btn-' + id + '-' + v);
+      if (!btn) return;
+      btn.className = 'score-btn' + (v === val ? ' active-' + val : '');
+    });
+  });
+  if (isAI) {
+    const badge = document.getElementById('badge-' + id);
+    if (badge) badge.innerHTML = '<span class="ai-badge">AUTO</span>';
+  }
+  updateVerdict();
+}
+
+// ═════════════════════════════════════════════════════════
+// VERDICT LOGIC
+// ═════════════════════════════════════════════════════════
+function getVerdict(pct, blocked) {
+  if (blocked) return {label:'BLOCKED', cls:'verdict-red'};
+  if (pct >= 75) return {label:'✓ PROCEED', cls:'verdict-green'};
+  if (pct >= 58) return {label:'~ CONDITIONAL — NEGOTIATE', cls:'verdict-amber'};
+  return {label:'✗ DO NOT PROCEED', cls:'verdict-red'};
+}
+
+function updateVerdict() {
+  // Compute section totals
+  const secScores = {1:0, 2:0, 3:0, 4:0, 5:0};
+  CRITERIA.forEach(c => {
+    const v = scores[c.id] || 0;
+    secScores[c.section] += v * c.weight;
+  });
+
+  const total = Object.values(secScores).reduce((a,b) => a+b, 0);
+  // If Section 3 (deal terms) is unscored, calculate against 48 — not 60
+  const dealTermsScored = secScores[3] > 0;
+  const max  = dealTermsScored ? 60 : 48;
+  const pct  = Math.round((total/max)*100);
+
+  const blocked = ['bl-gat','bl-vest','bl-club','bl-coi','bl-stage']
+    .some(id => document.getElementById(id)?.checked);
+
+  const verd = getVerdict(pct, blocked);
+
+  // Update displays
+  document.getElementById('pct-display').textContent = pct + '%';
+  document.getElementById('pts-display').textContent = total + ' / ' + max + ' pts' + (dealTermsScored ? '' : ' (deck only)');
+
+  const badge = document.getElementById('verdict-display-badge');
+  badge.innerHTML = `<div class="verdict-badge ${verd.cls}">${verd.label}</div>`;
+
+  // Section scores
+  [1,2,3,4,5].forEach(s => {
+    const el = document.getElementById('sec' + s + '-score');
+    if (el) el.textContent = secScores[s] + '/' + S_MAX[s];
+  });
+
+  // Section bars
+  const bars = document.getElementById('section-bars');
+  if (bars) {
+    const names = {1:'Equity Value',2:'M4E Fit',3:'Deal Structure',4:'Geo & Audience',5:'Epic 11 Alignment'};
+    bars.innerHTML = [1,2,3,4,5].map(s => {
+      const p = Math.round((secScores[s]/S_MAX[s])*100);
+      const col = p>=75?'var(--green)':p>=50?'var(--amber)':'var(--red)';
+      return `<div class="section-bar-row">
+        <div class="sec-bar-name">${names[s]}</div>
+        <div class="sec-bar-track"><div class="sec-bar-fill" style="width:${p}%;background:${col}"></div></div>
+        <div class="sec-bar-score">${secScores[s]}/${S_MAX[s]}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ═════════════════════════════════════════════════════════
+// STAGE NAVIGATION
+// ═════════════════════════════════════════════════════════
+function goStage(n) {
+  if (!pipeline.unlocked.includes(n)) return;
+  pipeline.stage = n;
+  [1,2,3,4].forEach(i => {
+    document.getElementById('stage'+i).classList.toggle('active', i===n);
+    const tab = document.getElementById('tab'+i);
+    tab.classList.remove('active','done','locked');
+    if (i < n) tab.classList.add('done');
+    else if (i === n) tab.classList.add('active');
+    else if (!pipeline.unlocked.includes(i)) tab.classList.add('locked');
+    // connector
+    const conn = document.getElementById('conn'+i);
+    if (conn) conn.classList.toggle('done', i < n);
+  });
+}
+
+function unlockStage(n) {
+  if (!pipeline.unlocked.includes(n)) pipeline.unlocked.push(n);
+}
+
+// ═════════════════════════════════════════════════════════
+// FILE HANDLING
+// ═════════════════════════════════════════════════════════
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.add('drag-over');
+}
+function handleDragLeave(e) {
+  document.getElementById('uploadZone').classList.remove('drag-over');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') loadFile(file);
+}
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if (file) loadFile(file);
+}
+function loadFile(file) {
+  pipeline.deck = file;
+  const zone = document.getElementById('uploadZone');
+  zone.innerHTML = `<div class="icon">✅</div><h3>${file.name}</h3><p>${(file.size/1024).toFixed(0)} KB — ready to analyse</p>`;
+  zone.classList.add('file-chosen');
+  document.getElementById('uploadActions').style.display = 'flex';
+
+  const reader = new FileReader();
+  reader.onload = e2 => {
+    const b64 = e2.target.result.split(',')[1];
+    pipeline.deckB64 = b64;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ═════════════════════════════════════════════════════════
+// STAGE 1: DECK ANALYSIS
+// ═════════════════════════════════════════════════════════
+async function runDeckAnalysis() {
+  if (!pipeline.deckB64) { alert('Please upload a PDF first.'); return; }
+  showLoading('Analysing deck…', 'Reading and scoring the pitch deck — this takes 15-30 seconds');
+
+  try {
+    const resp = await fetch('/analyze_deck', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({pdf_base64: pipeline.deckB64, filename: pipeline.deck?.name || 'deck.pdf'})
+    });
+    const data = await resp.json();
+    hideLoading();
+    if (data.error) { alert('AI Error: ' + data.error); return; }
+    pipeline.ai = data;
+    renderStage1Results(data);
+    showToast('Deck analysed — ' + (data.m4e_compatibility||'').toUpperCase() + ' compatibility', data.m4e_compatibility==='green'?'success':data.m4e_compatibility==='amber'?'warn':'error');
+  } catch(e) {
+    hideLoading();
+    alert('Request failed: ' + e.message);
+  }
+}
+
+function renderStage1Results(d) {
+  document.getElementById('screenResults').style.display = 'block';
+
+  // Verdict
+  const vc = d.m4e_compatibility === 'green' ? 'verdict-green' :
+             d.m4e_compatibility === 'amber' ? 'verdict-amber' : 'verdict-red';
+  const vi = d.m4e_compatibility === 'green' ? '✓' :
+             d.m4e_compatibility === 'amber' ? '~' : '✗';
+  document.getElementById('verdictArea').innerHTML = `
+    <div class="verdict-badge ${vc}" style="font-size:18px;padding:14px 24px">${vi} ${(d.m4e_compatibility||'').toUpperCase()} — M4E ${d.m4e_compatibility==='green'?'FIT':d.m4e_compatibility==='amber'?'POSSIBLE':'NOT SUITABLE'}</div>
+    <div style="font-size:13px;color:var(--text2);flex:1">${d.m4e_rationale||''}</div>`;
+
+  // Meta
+  const meta = [
+    {label:'Company', value: d.company||'—'},
+    {label:'Sector', value: d.sector||'—'},
+    {label:'Stage', value: d.stage||'—'},
+    {label:'Geography', value: d.geography||'—'},
+    {label:'Revenue', value: d.revenue_status||'—'},
+    {label:'Rev Figure', value: d.revenue_figure||'—'},
+  ];
+  document.getElementById('companyMeta').innerHTML = meta.map(m =>
+    `<div class="meta-item"><div class="label">${m.label}</div><div class="value">${m.value}</div></div>`
+  ).join('');
+
+  document.getElementById('productSummary').innerHTML =
+    `<div style="font-size:14px;line-height:1.6;color:var(--text2)">${d.product_summary||''}</div>`;
+
+  // Deck scores (11 auto-scored criteria)
+  const scoreKeys = Object.keys(AI_MAP);
+  const scoreEl = document.getElementById('deckScoreList');
+  const scoreLabels = {
+    business_stage_traction:'Business Stage & Traction',
+    liquidity_path:'Liquidity Path',
+    team_credibility:'Team Credibility',
+    brand_athlete_alignment:'Brand-Athlete Alignment',
+    social_content_potential:'Social Content Potential',
+    category_cleanliness:'Category Cleanliness',
+    campaign_concept_clarity:'Campaign Concept Clarity',
+    market_overlap:'Market Overlap (EU/UK/GCC)',
+    audience_match:'Audience Match',
+    player_brand_fit:'Player Brand Fit',
+    first_mover_advantage:'First-Mover Advantage',
+  };
+  scoreEl.innerHTML = scoreKeys.map(k => {
+    const v = d.scores?.[k] ?? 0;
+    const reasoning = d.score_reasoning?.[k] || '';
+    const col = v>=4?'var(--green)':v>=3?'var(--navy)':v>=2?'var(--amber)':'var(--red)';
+    return `<div class="criterion-row">
+      <div style="flex:1">
+        <div class="crit-name">${scoreLabels[k]||k}</div>
+        ${reasoning ? `<div class="crit-reasoning">${reasoning}</div>` : ''}
+      </div>
+      <div class="crit-bar-track" style="max-width:80px">
+        <div class="crit-bar-fill" style="width:${v*25}%;background:${col}"></div>
+      </div>
+      <div class="crit-score-badge" style="color:${col}">${v}/4</div>
+    </div>`;
+  }).join('');
+
+  // Player recommendations
+  const recs = d.player_recommendations || [];
+  const ds   = d.deal_structure_recommendation || {};
+  const pitch = d.pitch_angle || '';
+  if (recs.length || ds.type || pitch) {
+    document.getElementById('m4eInsightCards').style.display = 'grid';
+  }
+  document.getElementById('playerRecList').innerHTML = recs.length
+    ? recs.map(r => `<div class="player-rec-row">
+        <div>
+          <div class="player-rec-name">${r.player||''}</div>
+          <div class="player-rec-dots">${[1,2,3,4,5].map(i=>`<div class="dot${i<=(r.fit_score||0)?' filled':''}"></div>`).join('')}</div>
+        </div>
+        <div class="player-rec-rationale">${r.rationale||''}</div>
+      </div>`).join('')
+    : '<div style="font-size:13px;color:var(--mid);padding:8px">No player recommendations generated.</div>';
+
+  // Deal structure
+  if (ds.type) {
+    const cashBadge = ds.cash_friction_needed
+      ? `<span class="friction-badge">⚠ Cash friction payment needed</span>` : '';
+    document.getElementById('dealStructureCard').innerHTML = `
+      <div class="deal-struct-badge">${ds.type}</div>
+      <span style="font-size:12px;color:var(--mid);margin-left:8px">Target equity: ${ds.equity_range||'TBC'}</span>
+      ${cashBadge}
+      <div style="font-size:13px;color:var(--text2);margin-top:8px;line-height:1.5">${ds.rationale||''}</div>`;
+  } else {
+    document.getElementById('dealStructureCard').innerHTML = '<div style="font-size:13px;color:var(--mid);padding:4px">No deal structure recommendation generated.</div>';
+  }
+
+  // Pitch angle
+  document.getElementById('pitchAngleCard').innerHTML = pitch
+    ? `<div class="pitch-callout">${pitch}</div>`
+    : '<div style="font-size:13px;color:var(--mid)">No pitch angle generated.</div>';
+
+  // Strengths
+  document.getElementById('strengthList').innerHTML =
+    (d.key_strengths||[]).map(s=>`<li>${s}</li>`).join('');
+  document.getElementById('riskList').innerHTML =
+    (d.key_risks||[]).map(r=>`<li>${r}</li>`).join('');
+
+  // Blockers
+  if (d.blockers && d.blockers.length > 0) {
+    document.getElementById('blockersCard').style.display = 'block';
+    document.getElementById('blockersList').innerHTML = d.blockers.map(b =>
+      `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span class="blocker-badge">⚠ ${b}</span>
+      </div>`
+    ).join('');
+  }
+}
+
+function resetStage1() {
+  pipeline.deck = null; pipeline.deckB64 = null; pipeline.ai = null;
+  document.getElementById('screenResults').style.display = 'none';
+  const zone = document.getElementById('uploadZone');
+  zone.classList.remove('file-chosen');
+  zone.innerHTML = `<div class="icon">📄</div><h3>Drop PDF here or click to browse</h3><p>Supports PDF pitch decks up to 20MB</p><input type="file" id="deckInput" accept=".pdf" onchange="handleFileSelect(event)">`;
+  document.getElementById('uploadActions').style.display = 'none';
+  document.getElementById('blockersCard').style.display = 'none';
+}
+
+function proceedToMarket() {
+  if (!pipeline.ai) return;
+  unlockStage(2);
+  // Pre-fill market research fields
+  document.getElementById('mktCompany').value = pipeline.ai.company || '';
+  document.getElementById('mktSector').value = pipeline.ai.sector || '';
+  document.getElementById('mktGeo').value = pipeline.ai.geography || '';
+  document.getElementById('mktDesc').value = pipeline.ai.tagline || pipeline.ai.product_summary?.substring(0,120) || '';
+  goStage(2);
+}
+
+// ═════════════════════════════════════════════════════════
+// STAGE 2: MARKET RESEARCH
+// ═════════════════════════════════════════════════════════
+async function runMarketResearch() {
+  showLoading('Running market research…', 'Analysing the market landscape — this takes 15-30 seconds');
+  const payload = {
+    company:     document.getElementById('mktCompany').value,
+    sector:      document.getElementById('mktSector').value,
+    description: document.getElementById('mktDesc').value,
+    geography:   document.getElementById('mktGeo').value,
+  };
+  try {
+    const resp = await fetch('/market_research', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await resp.json();
+    hideLoading();
+    if (data.error) { alert('AI Error: ' + data.error); return; }
+    pipeline.market = data;
+    renderMarketResults(data);
+    showToast('Market research complete', 'success');
+  } catch(e) {
+    hideLoading();
+    alert('Request failed: ' + e.message);
+  }
+}
+
+function renderMarketResults(d) {
+  document.getElementById('marketResults').style.display = 'block';
+  document.getElementById('mktTAM').textContent = d.market_size_tam || '—';
+  document.getElementById('mktSAM').textContent = d.market_size_sam || '—';
+  document.getElementById('mktGrowth').textContent = d.market_growth || '—';
+
+  document.getElementById('competitorList').innerHTML = (d.top_competitors||[]).map(c =>
+    `<div class="competitor-row">
+      <div class="competitor-name">${c.name||''}</div>
+      <div class="competitor-note">${c.notes||''}</div>
+    </div>`
+  ).join('');
+
+  document.getElementById('athleteList').innerHTML = (d.athlete_partnership_examples||[]).map(a =>
+    `<div style="font-size:12px;color:var(--text2);padding:6px 0;border-bottom:1px solid var(--rule)">
+      <strong>${a.athlete||''}</strong> × <strong>${a.brand||''}</strong> — ${a.format||''}
+    </div>`
+  ).join('');
+
+  document.getElementById('playerGeoMatch').textContent = d.player_geo_match || '—';
+  document.getElementById('worldCupAngle').textContent = d.world_cup_angle || '—';
+  document.getElementById('investmentThesis').textContent = d.investment_thesis || '—';
+
+  document.getElementById('keyQuestions').innerHTML = (d.key_questions||[]).map(q =>
+    `<div class="question-item">❓ ${q}</div>`
+  ).join('');
+}
+
+function proceedToScore() {
+  unlockStage(3);
+  // Pre-fill scoresheet from AI
+  if (pipeline.ai) {
+    const scores_ = pipeline.ai.scores || {};
+    Object.entries(AI_MAP).forEach(([aiKey, critId]) => {
+      if (scores_[aiKey] !== undefined) {
+        setScore(critId, scores_[aiKey], true);
+      }
+    });
+    // Pre-fill blockers
+    if (pipeline.ai.blockers) {
+      const bl = pipeline.ai.blockers.join(' ').toLowerCase();
+      if (bl.includes('gambling')||bl.includes('alcohol')||bl.includes('tobacco'))
+        document.getElementById('bl-gat').checked = true;
+      if (bl.includes('vesting')||bl.includes('lock'))
+        document.getElementById('bl-vest').checked = true;
+      if (bl.includes('club rights'))
+        document.getElementById('bl-club').checked = true;
+      if (bl.includes('pre-seed')||bl.includes('seed stage'))
+        document.getElementById('bl-stage').checked = true;
+      updateVerdict();
+    }
+    // Pre-fill meta
+    document.getElementById('meta-company').value = pipeline.ai.company || '';
+    // Suggest player names from recommendations
+    const recNames = (pipeline.ai.player_recommendations || []).slice(0,2).map(r=>r.player).join(' / ');
+    if (recNames) document.getElementById('meta-players').value = recNames;
+
+    if (pipeline.ai.blockers?.length) {
+      document.getElementById('aiPrefillNotice').style.display = 'flex';
+    }
+  }
+  document.getElementById('aiPrefillNotice').style.display = 'flex';
+  goStage(3);
+}
+
+// ═════════════════════════════════════════════════════════
+// VALUATION CALCULATOR
+// ═════════════════════════════════════════════════════════
+function calcVal() {
+  const valNow  = parseFloat(document.getElementById('val-now').value) || 0;
+  const eqPct   = parseFloat(document.getElementById('val-eq').value) || 0;
+  const mult    = parseFloat(document.getElementById('val-mult').value) || 0;
+  const yrs     = parseFloat(document.getElementById('val-yrs').value) || 0;
+  const dilPct  = parseFloat(document.getElementById('val-dil').value) || 0;
+  const media   = parseFloat(document.getElementById('val-media').value) || 0;
+
+  if (!valNow || !eqPct || !mult) {
+    document.getElementById('val-results').style.display = 'none';
+    return;
+  }
+
+  const multiples = [0.25, 0.5, 1.0, 1.5, 2.0];
+  const tbody = document.getElementById('scenario-tbody');
+  tbody.innerHTML = '';
+  document.getElementById('val-results').style.display = 'block';
+
+  multiples.forEach(m => {
+    const coVal     = valNow * mult * m;
+    const dilEq     = eqPct * (1 - dilPct/100);
+    const epicShare = coVal * (dilEq/100);
+    const netUp     = epicShare - (media/1000);
+    const isBase    = m === 1.0;
+
+    const row = document.createElement('tr');
+    if (isBase) row.className = 'base-case';
+    row.innerHTML = `
+      <td>${m}x${isBase?' (base)':''}</td>
+      <td>€${coVal.toFixed(1)}M</td>
+      <td>€${epicShare.toFixed(2)}M</td>
+      <td class="${netUp>=0?'positive':'negative'}">€${netUp.toFixed(2)}M</td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+// ═════════════════════════════════════════════════════════
+// STAGE 4: MEMO
+// ═════════════════════════════════════════════════════════
+function proceedToMemo() {
+  unlockStage(4);
+  // Build meta summary
+  const comp = document.getElementById('meta-company').value || pipeline.ai?.company || 'TBC';
+  const blocked = ['bl-gat','bl-vest','bl-club','bl-coi','bl-stage'].some(id => document.getElementById(id)?.checked);
+  const secScores = {1:0,2:0,3:0,4:0,5:0};
+  CRITERIA.forEach(c => { secScores[c.section] += (scores[c.id]||0) * c.weight; });
+  const total = Object.values(secScores).reduce((a,b)=>a+b,0);
+  const sec3TotalMemo = CRITERIA.filter(c => c.section === 3).reduce((a,c) => a + (scores[c.id]||0)*c.weight, 0);
+  const effectiveMaxMemo = sec3TotalMemo > 0 ? 60 : 48;
+  const pct = Math.round((total/effectiveMaxMemo)*100);
+  const verd = getVerdict(pct, blocked);
+
+  document.getElementById('memoMeta').innerHTML = [
+    {label:'Company', value:comp},
+    {label:'Total Score', value:`${total}/${effectiveMaxMemo} (${pct}%)`},
+    {label:'Verdict', value:verd.label},
+    {label:'Reviewer', value:document.getElementById('meta-reviewer').value||'—'},
+    {label:'Deal Type', value:document.getElementById('meta-deal-type').value||'M4E'},
+    {label:'Date', value:new Date().toLocaleDateString('en-GB')},
+  ].map(m=>`<div class="meta-item"><div class="label">${m.label}</div><div class="value">${m.value}</div></div>`).join('');
+
+  goStage(4);
+}
+
+function buildPDFData() {
+  const comp = document.getElementById('meta-company').value || pipeline.ai?.company || 'TBC';
+  const blocked = ['bl-gat','bl-vest','bl-club','bl-coi','bl-stage'].some(id => document.getElementById(id)?.checked);
+  const secScores = {1:0,2:0,3:0,4:0,5:0};
+  CRITERIA.forEach(c => { secScores[c.section] += (scores[c.id]||0) * c.weight; });
+  const total = Object.values(secScores).reduce((a,b)=>a+b,0);
+  // Dynamic max: 48 if deal terms not yet entered, 60 when Section 3 is scored
+  const sec3Total = CRITERIA.filter(c => c.section === 3).reduce((a,c) => a + (scores[c.id]||0)*c.weight, 0);
+  const effectiveMax = sec3Total > 0 ? 60 : 48;
+  const pct = Math.round((total/effectiveMax)*100);
+  const verd = getVerdict(pct, blocked);
+
+  const sectionNames = {1:'Equity Value',2:'M4E Fit',3:'Deal Structure',4:'Geography & Audience',5:'Epic 11 Alignment'};
+
+  const activeBlockers = [];
+  if (document.getElementById('bl-gat').checked) activeBlockers.push('Gambling / Alcohol / Tobacco');
+  if (document.getElementById('bl-vest').checked) activeBlockers.push('No vesting / lock-up terms');
+  if (document.getElementById('bl-club').checked) activeBlockers.push('Club rights conflict');
+  if (document.getElementById('bl-coi').checked) activeBlockers.push('Unresolved conflict of interest');
+  if (document.getElementById('bl-stage').checked) activeBlockers.push('Pre-seed / seed stage (too early)');
+
+  // Valuation data
+  const valNow = parseFloat(document.getElementById('val-now').value) || 0;
+  const eqPct  = parseFloat(document.getElementById('val-eq').value) || 0;
+  const mult   = parseFloat(document.getElementById('val-mult').value) || 1;
+  const yrs    = parseFloat(document.getElementById('val-yrs').value) || 0;
+  const dilPct = parseFloat(document.getElementById('val-dil').value) || 0;
+  const media  = parseFloat(document.getElementById('val-media').value) || 0;
+  const hasVal = valNow > 0 && eqPct > 0;
+
+  let valData = {has_data: false};
+  if (hasVal) {
+    const dilEq     = eqPct * (1 - dilPct/100);
+    const todayVal  = valNow * (eqPct/100);
+    const exitComp  = valNow * mult;
+    const epicExit  = exitComp * (dilEq/100);
+    const netUp     = epicExit - (media/1000);
+    const rm        = media > 0 ? epicExit / (media/1000) : 0;
+
+    const scenMults = [0.25, 0.5, 1.0, 1.5, 2.0];
+    const scenarios = scenMults.map(m => ({
+      label: m + 'x',
+      is_base: m === 1.0,
+      co_val: valNow * mult * m,
+      epic_share: (valNow * mult * m) * (dilEq/100),
+      net_upside: (valNow * mult * m) * (dilEq/100) - (media/1000),
+    }));
+
+    valData = {
+      has_data: true,
+      val_now: valNow, eq_pct: eqPct, today_val: todayVal,
+      exit_mult: mult, exit_yrs: yrs, dilution: dilPct, dil_eq: dilEq,
+      exit_company: exitComp, epic_exit: epicExit,
+      media_cost: media, net_upside: netUp, ret_mult: rm,
+      scenarios,
+    };
+  }
+
+  // Observations — always include key notes alongside valuation
+  const observations = [];
+  if (pipeline.ai) {
+    if (pipeline.ai.m4e_rationale) observations.push({label:'M4E Rationale', value: pipeline.ai.m4e_rationale});
+    if (pipeline.ai.athlete_relevance) observations.push({label:'Athlete Relevance', value: pipeline.ai.athlete_relevance});
+    if (pipeline.ai.revenue_figure) observations.push({label:'Revenue', value: pipeline.ai.revenue_figure});
+    if (pipeline.ai.team_summary) observations.push({label:'Team', value: pipeline.ai.team_summary});
+    if (pipeline.market?.investment_thesis) observations.push({label:'Investment Thesis', value: pipeline.market.investment_thesis});
+  }
+
+  // Weak sections
+  const weakSections = [];
+  [1,2,3,4,5].forEach(s => {
+    if ((secScores[s]/S_MAX[s])*100 < 50) weakSections.push(sectionNames[s]);
+  });
+
+  const nextSteps = pipeline.ai?.next_steps || [];
+
+  return {
+    company: comp,
+    date: new Date().toLocaleDateString('en-GB'),
+    reviewer: document.getElementById('meta-reviewer').value || 'Epic 22',
+    players: document.getElementById('meta-players').value || 'TBC',
+    deal_type: document.getElementById('meta-deal-type').value || 'Media for Equity (M4E)',
+    verdict_label: verd.label.replace('✓ ','').replace('~ ','').replace('✗ ',''),
+    total, max_score: effectiveMax,
+    sections: [1,2,3,4,5].map(s => ({
+      name: sectionNames[s],
+      score: secScores[s],
+      max: S_MAX[s],
+    })),
+    criteria: CRITERIA.map(c => ({
+      name:  c.label,
+      score: scores[c.id] || 0,
+      note:  notes[c.id]  || '',
+    })),
+    blockers: activeBlockers,
+    valuation: valData,
+    observations,
+    context: document.getElementById('meta-context').value || '',
+    weak_sections: weakSections,
+    next_steps: nextSteps,
+    player_recommendations:   pipeline.ai?.player_recommendations   || [],
+    deal_structure:           pipeline.ai?.deal_structure_recommendation || {},
+    pitch_angle:              pipeline.ai?.pitch_angle               || '',
+  };
+}
+
+async function generateMemo() {
+  const data = buildPDFData();
+  showLoading('Generating PDF…', 'Building your deal memorandum');
+  try {
+    const resp = await fetch('/generate_pdf', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    hideLoading();
+    if (!resp.ok) { alert('PDF generation failed'); return; }
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `epic22-${(data.company||'deal').toLowerCase().replace(/\s+/g,'-')}-memo.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch(e) {
+    hideLoading();
+    alert('Failed: ' + e.message);
+  }
+}
+
+function resetAll() {
+  localStorage.removeItem(DEALS_SAVE_KEY);
+  pipeline.deck = null; pipeline.deckB64 = null; pipeline.ai = null; pipeline.market = null;
+  pipeline.unlocked = [1];
+  Object.keys(scores).forEach(k => delete scores[k]);
+  Object.keys(notes).forEach(k => delete notes[k]);
+  document.getElementById('m4eInsightCards').style.display = 'none';
+  // Reset blockers
+  ['bl-gat','bl-vest','bl-club','bl-coi','bl-stage'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.checked = false;
+  });
+  initScoreButtons();
+  resetStage1();
+  goStage(1);
+}
+
+// ═════════════════════════════════════════════════════════
+// TABS (Stage 3)
+// ═════════════════════════════════════════════════════════
+function switchTab(name) {
+  ['scoresheet','valuation'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===name);
+  });
+  document.querySelectorAll('.tab-btn').forEach((btn,i) => {
+    btn.classList.toggle('active', ['scoresheet','valuation'][i] === name);
+  });
+}
+
+// ═════════════════════════════════════════════════════════
+// LOADING HELPERS
+// ═════════════════════════════════════════════════════════
+function showLoading(title, text) {
+  document.getElementById('loadingTitle').textContent = title;
+  document.getElementById('loadingText').textContent = text;
+  document.getElementById('loadingOverlay').classList.add('show');
+}
+function hideLoading() {
+  document.getElementById('loadingOverlay').classList.remove('show');
+}
+
+
+function showToast(msg, type) {
+  const t = document.createElement('div');
+  const bg = type === 'success' ? '#4caf6e' : type === 'error' ? '#e05252' : '#c9a85c';
+  t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9998;background:#101010;border:1px solid ' + bg + ';color:#f0ede8;padding:12px 18px;border-radius:8px;font-size:12px;font-family:Syne,sans-serif;letter-spacing:0.04em;box-shadow:0 4px 24px rgba(0,0,0,0.5);opacity:0;transform:translateY(8px);transition:all 0.2s;max-width:300px;line-height:1.5';
+  t.innerHTML = '<span style="color:' + bg + ';margin-right:8px">' + (type==='success'?'✓':type==='error'?'✗':'●') + '</span>' + msg;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity='1'; t.style.transform='translateY(0)'; }, 10);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(8px)'; setTimeout(()=>t.remove(),200); }, 3500);
+}
+
+
+
+/* ══════════════════════════════
+   LOCALSTORAGE AUTO-SAVE
+══════════════════════════════ */
+const DEALS_SAVE_KEY = 'epic22_deals_v1';
+
+function saveDealsProgress() {
+  try {
+    const data = {
+      scores: {...scores},
+      notes: {...notes},
+      meta: {
+        company:  document.getElementById('meta-company')?.value || '',
+        reviewer: document.getElementById('meta-reviewer')?.value || '',
+        players:  document.getElementById('meta-players')?.value || '',
+        dealType: document.getElementById('meta-deal-type')?.value || '',
+        context:  document.getElementById('meta-context')?.value || '',
+      },
+      valuation: {
+        valNow:  document.getElementById('val-now')?.value || '',
+        eqPct:   document.getElementById('val-eq')?.value || '',
+        mult:    document.getElementById('val-mult')?.value || '',
+        yrs:     document.getElementById('val-yrs')?.value || '',
+        dilPct:  document.getElementById('val-dil')?.value || '',
+        media:   document.getElementById('val-media')?.value || '',
+      },
+      blockers: {
+        gat:   document.getElementById('bl-gat')?.checked || false,
+        vest:  document.getElementById('bl-vest')?.checked || false,
+        club:  document.getElementById('bl-club')?.checked || false,
+        coi:   document.getElementById('bl-coi')?.checked || false,
+        stage: document.getElementById('bl-stage')?.checked || false,
+      },
+      market: pipeline.market,
+      ai: pipeline.ai,
+      stage: pipeline.stage,
+      unlocked: pipeline.unlocked,
+      ts: Date.now(),
+    };
+    localStorage.setItem(DEALS_SAVE_KEY, JSON.stringify(data));
+  } catch(e) { console.warn('Deals save failed:', e); }
+}
+
+function loadDealsProgress() {
+  try {
+    const raw = localStorage.getItem(DEALS_SAVE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+
+    // Restore scores
+    if (saved.scores) {
+      Object.entries(saved.scores).forEach(([k, v]) => setScore(k, v, false));
+    }
+    // Restore notes
+    if (saved.notes) {
+      Object.entries(saved.notes).forEach(([k, v]) => {
+        notes[k] = v;
+        // Find the note input for this criterion
+        const inputs = document.querySelectorAll('.crit-note-input');
+        inputs.forEach(inp => {
+          if (inp.getAttribute('oninput')?.includes("notes['" + k + "']")) inp.value = v;
+        });
+      });
+    }
+    // Restore meta fields
+    if (saved.meta) {
+      if (document.getElementById('meta-company'))  document.getElementById('meta-company').value  = saved.meta.company  || '';
+      if (document.getElementById('meta-reviewer')) document.getElementById('meta-reviewer').value = saved.meta.reviewer || '';
+      if (document.getElementById('meta-players'))  document.getElementById('meta-players').value  = saved.meta.players  || '';
+      if (document.getElementById('meta-deal-type'))document.getElementById('meta-deal-type').value= saved.meta.dealType || 'Media for Equity (M4E)';
+      if (document.getElementById('meta-context'))  document.getElementById('meta-context').value  = saved.meta.context  || '';
+    }
+    // Restore valuation
+    if (saved.valuation) {
+      if (document.getElementById('val-now'))  document.getElementById('val-now').value  = saved.valuation.valNow  || '';
+      if (document.getElementById('val-eq'))   document.getElementById('val-eq').value   = saved.valuation.eqPct   || '';
+      if (document.getElementById('val-mult')) document.getElementById('val-mult').value = saved.valuation.mult    || '';
+      if (document.getElementById('val-yrs'))  document.getElementById('val-yrs').value  = saved.valuation.yrs     || '';
+      if (document.getElementById('val-dil'))  document.getElementById('val-dil').value  = saved.valuation.dilPct  || '';
+      if (document.getElementById('val-media'))document.getElementById('val-media').value= saved.valuation.media   || '';
+      calcVal();
+    }
+    // Restore blockers
+    if (saved.blockers) {
+      if (document.getElementById('bl-gat'))   document.getElementById('bl-gat').checked   = saved.blockers.gat   || false;
+      if (document.getElementById('bl-vest'))  document.getElementById('bl-vest').checked  = saved.blockers.vest  || false;
+      if (document.getElementById('bl-club'))  document.getElementById('bl-club').checked  = saved.blockers.club  || false;
+      if (document.getElementById('bl-coi'))   document.getElementById('bl-coi').checked   = saved.blockers.coi   || false;
+      if (document.getElementById('bl-stage')) document.getElementById('bl-stage').checked = saved.blockers.stage || false;
+    }
+    // Restore AI + market data and unlock stages
+    if (saved.ai) { pipeline.ai = saved.ai; }
+    if (saved.market) { pipeline.market = saved.market; }
+    if (saved.unlocked) { pipeline.unlocked = saved.unlocked; }
+    updateVerdict();
+
+    // Show restore toast if there was meaningful data
+    if (saved.meta?.company) {
+      showToast('Progress restored — ' + saved.meta.company, 'success');
+    }
+  } catch(e) { console.warn('Deals load failed:', e); }
+}
+
+function clearDealsProgress() {
+  localStorage.removeItem(DEALS_SAVE_KEY);
+  showToast('Deal cleared', 'warn');
+  setTimeout(() => location.reload(), 800);
+}
+
+/* Auto-save on any score change, input change */
+const _origSetScore = setScore;
+window.setScore = function(id, val, isAI) {
+  _origSetScore(id, val, isAI);
+  saveDealsProgress();
+};
+
+/* Save on input changes — hook all meta/val inputs */
+document.addEventListener('input', function(e) {
+  const id = e.target.id || '';
+  if (id.startsWith('meta-') || id.startsWith('val-') || id.startsWith('bl-') || e.target.classList.contains('crit-note-input')) {
+    saveDealsProgress();
+  }
+});
+document.addEventListener('change', function(e) {
+  const id = e.target.id || '';
+  if (id.startsWith('bl-')) {
+    saveDealsProgress();
+    updateVerdict();
+  }
+});
+
+// BOOT
+initScoreButtons();
+loadDealsProgress();
+</script>
 </body>
 </html>
