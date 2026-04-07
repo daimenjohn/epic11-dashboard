@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Epic Nation Lineup — Player roster and M4E scout tool">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23101010'/><text y='.9em' font-size='70' x='50%' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' fill='%23c9a85c'>E</text></svg>">
 <title>Epic Nation Lineup</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Syne:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -385,16 +387,68 @@ body::after {
 /* Edit button in detail strip */
 .edit-btn { flex:1; padding:8px 6px; border-radius:6px; font-size:10px; font-weight:600; cursor:pointer; font-family:var(--sans); letter-spacing:0.05em; text-transform:uppercase; transition:all 0.12s; background:var(--surface2); color:var(--muted); border:1px solid rgba(255,255,255,0.07); }
 .edit-btn:hover { color:var(--white); border-color:var(--gold-border); }
+
+/* ── KEYBOARD SHORTCUTS ── */
+.kb-hint {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 12px; z-index: 200; pointer-events: none;
+  opacity: 0; transition: opacity 0.3s;
+}
+.kb-hint.visible { opacity: 1; }
+.kb-key {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface2); border: 1px solid var(--gold-border);
+  border-radius: 6px; padding: 5px 10px;
+  font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase;
+}
+.kb-key kbd {
+  background: var(--surface3); border: 1px solid var(--dim);
+  border-radius: 3px; padding: 1px 6px; font-size: 10px;
+  color: var(--gold); font-family: var(--sans);
+}
+
+/* ── MOBILE LAYOUT ── */
+@media (max-width: 860px) {
+  .workspace { grid-template-columns: 1fr !important; }
+  .sidebar { display: none; }
+  .detail-panel { display: none; }
+  html, body { overflow: auto; }
+  .main { min-height: 100vh; }
+  .pitch-outer { flex-direction: column; }
+  .dugout { width: 100%; flex-direction: row; border-radius: 10px 10px 0 0; border-right: 1px solid rgba(201,168,92,0.1); border-bottom: none; padding: 10px 16px; justify-content: center; }
+  .dugout::after { display: none; }
+  .dugout-right { width: 100%; flex-direction: row; justify-content: space-around; border-radius: 0 0 10px 10px; border-left: 1px solid rgba(201,168,92,0.1); border-top: none; padding: 10px 16px; }
+  .pitch-field { border-radius: 0; border-left: none; border-right: none; }
+  .bench-seat { flex-direction: row; width: auto; padding: 6px 12px; }
+  .bench-av { width: 32px; height: 32px; font-size: 11px; }
+  .cards-grid { grid-template-columns: 1fr 1fr !important; }
+  .topbar { padding: 0 14px; }
+}
+@media (max-width: 480px) {
+  .cards-grid { grid-template-columns: 1fr !important; }
+  .pitch-av { width: 36px; height: 36px; font-size: 11px; }
+  .pitch-pname { font-size: 7px; max-width: 40px; }
+  .main-head { padding: 12px 14px 10px; }
+  .main-body { padding: 12px 14px; }
+}
+
+/* ── SAVE INDICATOR ── */
+.save-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--confirmed); flex-shrink: 0;
+  transition: background 0.3s;
+}
+.save-dot.saving { background: var(--pipeline); animation: pulse 0.8s infinite; }
 </style>
 </head>
 <body>
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <div class="brand">
+  <a href="/" class="brand" style="text-decoration:none">
     <div class="brand-mark">E</div>
     <div><span class="brand-name">Epic Nation</span><span class="brand-tag">Lineup</span></div>
-  </div>
+  </a>
   <div class="topbar-stats">
     <div class="ts"><div class="ts-num gold">11</div><div class="ts-label">Roster</div></div>
     <div class="dv"></div>
@@ -405,6 +459,17 @@ body::after {
     <div class="ts"><div class="ts-num gray" id="s-open">6</div><div class="ts-label">Open</div></div>
   </div>
   <div class="live-badge"><div class="live-dot"></div>Live</div>
+  <div class="save-dot" id="saveDot" title="Saved"></div>
+  <a href="/" style="font-size:10px;color:var(--muted);text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(255,255,255,0.06);border-radius:6px;transition:all .12s;white-space:nowrap" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold-border)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='rgba(255,255,255,0.06)'">← Platform</a>
+</div>
+
+
+<!-- KEYBOARD HINTS -->
+<div class="kb-hint" id="kbHint">
+  <div class="kb-key"><kbd>P</kbd> Pitch</div>
+  <div class="kb-key"><kbd>C</kbd> Cards</div>
+  <div class="kb-key"><kbd>S</kbd> Scout</div>
+  <div class="kb-key"><kbd>Esc</kbd> Close</div>
 </div>
 
 <!-- WORKSPACE -->
@@ -1201,6 +1266,7 @@ function submitModal(mode, id) {
   if (currentView==='pitch') renderPitch();
   if (currentView==='cards') renderCards();
   renderDetail();
+  showToast(mode==='edit' ? p.name + ' updated' : p.name + ' added to lineup', 'success');
 }
 
 function removePlayer(id) {
@@ -1218,14 +1284,150 @@ function removePlayer(id) {
   if (currentView==='pitch') renderPitch();
   if (currentView==='cards') renderCards();
   renderDetail();
+  showToast(p.name + ' removed from lineup', 'error');
 }
+
+
+/* ── TOAST NOTIFICATIONS ── */
+function showToast(msg, type) {
+  const t = document.createElement('div');
+  const bg = type === 'success' ? 'var(--confirmed)' : type === 'error' ? 'var(--danger)' : 'var(--gold)';
+  t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9998;background:var(--surface);border:1px solid ' + bg + ';color:var(--white);padding:12px 18px;border-radius:8px;font-size:12px;font-family:var(--sans);letter-spacing:0.04em;box-shadow:0 4px 24px rgba(0,0,0,0.4);opacity:0;transform:translateY(8px);transition:all 0.2s;max-width:280px;line-height:1.5';
+  t.innerHTML = '<span style="color:' + bg + ';margin-right:8px">' + (type==='success'?'✓':type==='error'?'✗':'●') + '</span>' + msg;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity='1'; t.style.transform='translateY(0)'; }, 10);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(8px)'; setTimeout(()=>t.remove(),200); }, 3200);
+}
+
+
+
+/* ══════════════════════════════
+   LOCALSTORAGE PERSISTENCE
+══════════════════════════════ */
+const SAVE_KEY = 'epic22_lineup_v1';
+
+function saveRoster() {
+  const saveDot = document.getElementById('saveDot');
+  if (saveDot) saveDot.className = 'save-dot saving';
+  try {
+    const data = roster.map(p => ({
+      id: p.id, name: p.name, initials: p.initials,
+      club: p.club, nat: p.nat, pos: p.pos, posLabel: p.posLabel,
+      status: p.status, followers: p.followers, eng: p.eng,
+      fScore: p.fScore, bScore: p.bScore, dScore: p.dScore,
+      rights: p.rights, blockers: p.blockers,
+      rInsta: p.rInsta, rYT: p.rYT, rTW: p.rTW,
+      insight: p.insight, sensitivity: p.sensitivity
+    }));
+    const dugoutData = dugout.map(d => ({
+      id: d.id, name: d.name, initials: d.initials,
+      dugoutRole: d.dugoutRole, status: d.status, insight: d.insight
+    }));
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ roster: data, dugout: dugoutData, ts: Date.now() }));
+    setTimeout(() => {
+      if (saveDot) saveDot.className = 'save-dot';
+    }, 600);
+  } catch(e) { console.warn('Save failed:', e); }
+}
+
+function loadRoster() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    const saved = JSON.parse(raw);
+    if (!saved.roster) return false;
+    saved.roster.forEach(savedP => {
+      const p = roster.find(r => r.id === savedP.id);
+      if (p) Object.assign(p, savedP);
+    });
+    if (saved.dugout) {
+      saved.dugout.forEach(savedD => {
+        const d = dugout.find(x => x.id === savedD.id);
+        if (d) Object.assign(d, savedD);
+      });
+    }
+    return true;
+  } catch(e) { console.warn('Load failed:', e); return false; }
+}
+
+function clearSavedRoster() {
+  localStorage.removeItem(SAVE_KEY);
+  showToast('Roster reset to defaults', 'warn');
+  location.reload();
+}
+
+/* Hook saveRoster into all mutation points */
+const _origSubmitModal = submitModal;
+window.submitModal = function(mode, id) {
+  _origSubmitModal(mode, id);
+  saveRoster();
+};
+const _origRemovePlayer = removePlayer;
+window.removePlayer = function(id) {
+  _origRemovePlayer(id);
+  saveRoster();
+};
+const _origAddCandidate = addCandidate;
+window.addCandidate = function(name, pos, club, followers, eng) {
+  _origAddCandidate(name, pos, club, followers, eng);
+  saveRoster();
+};
+
+/* ══════════════════════════════
+   KEYBOARD SHORTCUTS
+══════════════════════════════ */
+let kbHintTimeout;
+document.addEventListener('keydown', function(e) {
+  // Don't fire if typing in an input/textarea/modal
+  const tag = document.activeElement?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  if (document.getElementById('playerModal')) return;
+
+  const hint = document.getElementById('kbHint');
+
+  switch(e.key.toLowerCase()) {
+    case 'p':
+      e.preventDefault();
+      document.querySelector('.vtab:nth-child(1)')?.click();
+      break;
+    case 'c':
+      e.preventDefault();
+      document.querySelector('.vtab:nth-child(2)')?.click();
+      break;
+    case 's':
+      e.preventDefault();
+      document.querySelector('.vtab:nth-child(3)')?.click();
+      break;
+    case 'escape':
+      closeModal();
+      break;
+    case '?':
+      if (hint) {
+        hint.classList.add('visible');
+        clearTimeout(kbHintTimeout);
+        kbHintTimeout = setTimeout(() => hint.classList.remove('visible'), 3000);
+      }
+      break;
+  }
+});
+
+/* Show hint briefly on load */
+setTimeout(() => {
+  const hint = document.getElementById('kbHint');
+  if (hint) {
+    hint.classList.add('visible');
+    kbHintTimeout = setTimeout(() => hint.classList.remove('visible'), 2500);
+  }
+}, 1200);
 
 /* ══════════════════════════════
    INIT
 ══════════════════════════════ */
+loadRoster();
 renderRosterList();
 renderPitch();
 renderDetail();
+updateStats();
 </script>
 </body>
 </html>
