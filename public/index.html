@@ -135,9 +135,9 @@
   .modules {
     position: relative; z-index: 1;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1px;
-    max-width: 1200px;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 1100px;
     width: 100%;
     margin: 0 auto;
     opacity: 0; animation: fadeUp 1s ease 0.8s forwards;
@@ -147,21 +147,18 @@
     position: relative;
     background: var(--surface);
     border: 1px solid var(--gold-border);
-    padding: 40px 36px 36px;
+    border-radius: 12px;
+    padding: 36px 32px 32px;
     cursor: pointer;
     text-decoration: none;
-    display: block;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     transition: border-color 0.2s, background 0.2s;
-    group: module;
   }
-  .module:first-child { border-radius: 12px 0 0 12px; }
-  .module:last-child { border-radius: 0 12px 12px 0; }
-  .module:only-child { border-radius: 12px; }
 
   @media (max-width: 768px) {
-    .module:first-child { border-radius: 12px 12px 0 0; }
-    .module:last-child { border-radius: 0 0 12px 12px; }
+    .modules { grid-template-columns: 1fr; }
   }
 
   .module::before {
@@ -204,7 +201,9 @@
   }
 
   .module-features {
-    display: flex; flex-direction: column; gap: 6px; margin-bottom: 32px;
+    display: flex; flex-direction: column; gap: 6px;
+    margin-bottom: 28px;
+    flex: 1;
   }
   .module-feature {
     display: flex; align-items: center; gap: 8px;
@@ -293,8 +292,8 @@
   .divider-line { flex: 1; height: 1px; background: var(--gold-border); }
   .divider-text { font-size: 9px; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase; white-space: nowrap; }
 
-  /* ── COMING SOON SHIMMER ── */
-  .module.coming-soon { opacity: 0.6; cursor: default; }
+  /* ── COMING SOON ── */
+  .module.coming-soon { opacity: 0.55; cursor: default; }
   .module.coming-soon:hover { border-color: var(--gold-border); background: var(--surface); }
   .module.coming-soon:hover::before { opacity: 0; }
   .module.coming-soon:hover .module-icon { transform: none; }
